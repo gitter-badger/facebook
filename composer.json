@@ -2,8 +2,20 @@
     "name": "cfralick/facebook",
     "license": "BSD",
     "type": "library",
+    "time": "2014-12-08",
     "keywords": ["guzzle", "api", "client"],
     "description": "Facebook graph api client",
+    "homepage": "https://github.com/cfralick/facebook",
+    "authors": [
+        {
+            "name": "Clint Fralick",
+            "email": "cfralick@creeperengine.com",
+            "role": "Contributor"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/cfralick/facebook.git"
+    },
     "require": {
         "php": ">=5.5",
         "guzzlehttp/guzzle": "~5.0",
@@ -24,6 +36,7 @@
         "psr-4": {"Facebook\\Tests\\": "tests/"}
     },
     "minimum-stability": "stable",
+    "prefer-stable": true,
     "require-dev": {
         "phpunit/phpunit": "~4.3",
         "phpunit/php-invoker": "~1.1",
