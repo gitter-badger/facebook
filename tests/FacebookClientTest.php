@@ -10,7 +10,7 @@
  */
 
 namespace Facebook\Tests;
-use Facebook\Tests\ClientTestCase;
+use \Facebook\Tests\ClientTestCase;
 
 
 class FacebookClientTest extends ClientTestCase
