@@ -1,0 +1,38 @@
+{
+    "name": "cfralick/facebook",
+    "license": "BSD",
+    "type": "library",
+    "keywords": ["guzzle", "api", "client"],
+    "description": "Facebook graph api client",
+    "require": {
+        "php": ">=5.5",
+        "guzzlehttp/guzzle": "~5.0",
+        "nikic/iter": "~1.1",
+        "guzzlehttp/log-subscriber": "~1.0",
+        "guzzlehttp/retry-subscriber": "~2.0",
+        "guzzlehttp/cache-subscriber": "~0.1",
+        "pimple/pimple": "~3.0",
+        "guzzlehttp/guzzle-services": "~0.4",
+        "guzzlehttp/message-integrity-subscriber": "~0.2",
+        "connorvg/laravel-transform": "~1.0"
+    },
+    "autoload": {
+        "psr-4": { "Facebook\\": "src/" },
+        "files": ["src/utils.php"]
+    },
+    "autoload-dev": {
+        "psr-4": {"Facebook\\Tests\\": "tests/"}
+    },
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "~4.3",
+        "phpunit/php-invoker": "~1.1",
+        "phpunit/phpunit-skeleton-generator": "~2.0"
+    },
+    "config": {
+        "use-include-path": true
+    },
+    "scripts": {
+        "tests": "phpunit -c phpunit.xml.dist -v"
+    }
+}

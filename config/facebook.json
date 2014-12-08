@@ -1,0 +1,241 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "baseUrl": "https://graph.facebook.com",
+    "name": "Graph API",
+    "operations": {
+        "getObject": {
+            "httpMethod": "GET",
+            "uri": "/{+version}{/path*}",
+            "responseClass": "ObjectModel",
+            "parameters": {
+                "version": { "$ref": "Version" },
+                "path": { "$ref": "Path" },
+                "fields": { "$ref": "Fields" },
+                "access_token": {"$ref": "AccessToken" }
+            }
+        },
+        "getAppAccessToken": {
+            "httpMethod": "GET",
+            "uri": "/oauth/access_token",
+            "responseClass": "AccessTokenModel",
+            "parameters": {
+                "client_id": { "$ref": "RequiredQueryString" },
+                "client_secret": { "$ref": "RequiredQueryString" },
+                "grant_type": {
+                    "location": "query",
+                    "static": true,
+                    "default": "client_credentials"
+                }
+            }
+        },
+        "debugToken": {
+            "httpMethod": "GET",
+            "uri": "/debug_token",
+            "responseClass": "DebugTokenModel",
+            "parameters": {
+                "input_token": { "$ref": "RequiredQueryString" },
+                "access_token": { "$ref": "RequiredQueryString" }
+            }
+        },
+        "page": {
+            "extends": "getObject",
+            "responseClass": "PageModel"
+        },
+        "user": {
+            "extends": "getObject",
+            "responseClass": "UserModel"
+        },
+        "place": {
+            "extends": "getObject",
+            "responseClass": "PlaceModel"
+        },
+        "application": {
+            "extends": "getObject",
+            "responseClass": "ApplicationModel"
+        },
+        "account": {
+            "extends": "getObject",
+            "responseClass": "AccountModel"
+        },
+        "fans": {
+            "extends": "getObject",
+            "responseClass": "FansModel"
+        },
+        "collection": {
+            "extends": "getObject",
+            "responseClass": "CollectionModel"
+        }
+    },
+    "models": {
+        "AccessToken": {
+            "type": "string",
+            "location": "query",
+            "required": false
+        },
+        "Version": {
+            "type": "string",
+            "location": "uri",
+            "required": true,
+            "default": "v1.0"
+        },
+        "Path": {
+            "type": "array",
+            "location": "uri",
+            "required": true
+        },
+        "Fields": {
+            "type": "array",
+            "location": "query",
+            "required": false,
+            "filters": [
+                {
+                    "method": "join",
+                    "args": [",", "@value"]
+                }
+            ]
+        },
+        "FacebookId": {
+            "sentAs": "id",
+            "type": ["number","string"],
+            "location": "json",
+            "required": true
+        },
+        "RequiredString": {
+            "location": "json",
+            "type": "string",
+            "required": true
+        },
+        "RequiredQueryString": {
+            "location": "query",
+            "type": "string",
+            "required": true
+        },
+        "OptionalString": {
+            "location": "json",
+            "type": "string",
+            "required": false
+        },
+        "OptionalQueryString": {
+            "location": "query",
+            "type": "string",
+            "required": false
+        },
+        "ParsedUrl": {
+            "type": ["array", "string"],
+            "required": false,
+            "filters": ["parse_url"]
+        },
+        "DefaultZero": {
+            "location": "json",
+            "type": "number",
+            "required": false,
+            "default": 0
+        },
+        "ObjectModel": {
+            "type": "object"
+        },
+        "PageModel": {
+            "extends": "ObjectModel",
+            "properties": {
+                "facebook_id": { "$ref": "FacebookId" },
+                "name": { "$ref": "RequiredString" },
+                "username": { "$ref": "OptionalString" },
+                "category": { "$ref": "RequiredString" }
+            }
+        },
+        "UserModel": {
+            "extends": "ObjectModel",
+            "properties": {
+                "facebook_id": { "$ref": "FacebookId" },
+                "name": { "$ref": "RequiredString" },
+                "username": { "$ref": "OptionalString" },
+                "first_name": { "$ref": "RequiredString" },
+                "last_name": { "$ref": "RequiredString" },
+                "locale": { "$ref": "OptionalString" },
+                "gender": { "$ref": "OptionalString" }
+            }
+        },
+        "FansModel": {
+            "extends": "ObjectModel",
+            "properties": {
+                "facebook_id": { "$ref": "FacebookId" },
+                "fan_count": {
+                    "location": "json",
+                    "type": "number",
+                    "default": 0,
+                    "required": true,
+                    "sentAs": "likes"
+                },
+                "talking_about_count": { "$ref": "DefaultZero" }
+            }
+        },
+        "PlaceModel": {
+            "extends": "ObjectModel",
+            "properties": {
+                "facebook_id": { "$ref": "FacebookId" },
+                "name": { "$ref": "RequiredString" }
+            }
+        },
+        "PostModel": {
+            "type": "object",
+            "location": "json",
+            "properties": {
+                "type": { "$ref": "RequiredString" },
+                "facebook_id": { "$ref": "FacebookId" },
+                "status_type": { "$ref": "RequiredString" },
+                "message": { "$ref": "OptionalString" },
+                "story": { "$ref": "OptionalString" },
+                "timeline_visibility": { "$ref": "OptionalString" }
+            }
+        },
+        "PostsModel": {
+            "type": "array",
+            "location": "json",
+            "sentAs": "data",
+            "items": { "$ref": "PostModel" }
+        },
+        "PagingModel": {
+            "type": "object",
+            "location": "json",
+            "required": false,
+            "properties": {
+                "previous": { "$ref": "ParsedUrl" },
+                "next": { "$ref": "ParsedUrl" }
+            }
+        },
+        "CollectionModel": {
+            "extends": "ObjectModel",
+            "properties": {
+                "paging": { "$ref": "PagingModel" }
+            },
+            "additionalProperties": {
+                "location": "json"
+            }
+        },
+        "AccessTokenModel": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "location": "body",
+                    "type": "string",
+                    "filters": [
+                        {
+                            "method": "strval",
+                            "args": ["@value"]
+                        },
+                        {
+                            "method": "str_replace",
+                            "args": ["access_token=", "", "@value"]
+                        }
+                    ]
+                }
+            }
+        },
+        "DebugTokenModel": {
+            "type": "object",
+            "additionalProperties": {
+                "location": "json"
+            }
+        }
+    }
+}
