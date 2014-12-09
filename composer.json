@@ -1,6 +1,6 @@
 {
     "name": "cfralick/facebook",
-    "license": "BSD",
+    "license": "BSD-2-Clause",
     "type": "library",
     "time": "2014-12-08",
     "keywords": ["guzzle", "api", "client"],
@@ -44,6 +44,6 @@
         "phpunit/phpunit-skeleton-generator": "~2.0"
     },
     "scripts": {
-        "tests": "phpunit -c phpunit.xml.dist -v"
+        "test": "phpunit -c phpunit.xml.dist -v"
     }
 }
