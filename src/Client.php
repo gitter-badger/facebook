@@ -5,6 +5,8 @@
 
 namespace Facebook;
 use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use Doctrine\Common\Collections\ArrayCollection;
+use Facebook\mapResult;
 
 
 class Client
@@ -41,10 +43,15 @@ class Client
         )); 
     }
     
-    public function posts($identifier)
+    public function collection(array $path, array $fields)
     {
-        $params = ['path' => [$identifier, 'posts'], 'fields' => ['id','type','status_type','updated_time']];
-        return new Result($this->client->collection($params));
+        return $this->client->collection(get_defined_vars());
+    }
+    
+    public function posts($identifier, array $fields = ['id'])
+    {
+        $posts = $this->collection([$identifier, 'posts'], $fields);
+        return mapResult($posts['data'], [], []);
     }
 
     public function __call($method, $arguments)

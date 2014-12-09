@@ -10,6 +10,21 @@
  */
 
 namespace Facebook;
+use Doctrine\Common\Collections\ArrayCollection;
+use ConnorVG\Transform\Transform;
+
+function transformResult(array $object, array $types = [], array $aliases = []) {
+    return new Result(Transform::make($object, $types, $aliases));
+}
+
+function mapResult(array $objects, array $types = [], array $aliases = []) {
+    $fn = function($x) use ($types, $aliases) {
+        return transformResult($x, $types, $aliases);
+    };
+    
+    return new ArrayCollection(array_map($fn, $objects));
+}
+
 function parseQs($query) {
     $qs = [];
     parse_str($query, $qs);

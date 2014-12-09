@@ -1,6 +1,6 @@
 {
     "name": "cfralick/facebook",
-    "license": "BSD",
+    "license": "BSD-2-Clause",
     "type": "library",
     "time": "2014-12-08",
     "keywords": ["guzzle", "api", "client"],
@@ -26,7 +26,8 @@
         "pimple/pimple": "~3.0",
         "guzzlehttp/guzzle-services": "~0.4",
         "guzzlehttp/message-integrity-subscriber": "~0.2",
-        "connorvg/laravel-transform": "~1.0"
+        "connorvg/laravel-transform": "~1.0",
+        "doctrine/collections": "~1.2"
     },
     "autoload": {
         "psr-4": { "Facebook\\": "src/" },
@@ -43,6 +44,6 @@
         "phpunit/phpunit-skeleton-generator": "~2.0"
     },
     "scripts": {
-        "tests": "phpunit -c phpunit.xml.dist -v"
+        "test": "phpunit -c phpunit.xml.dist -v"
     }
 }
