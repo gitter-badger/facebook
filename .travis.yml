@@ -1,0 +1,11 @@
+language: php
+
+php:
+  - 5.5
+  - 5.4
+
+before_script: 
+  - composer update --prefer-source --no-interaction --quiet
+
+script:
+  - ./vendor/bin/phpunit -v -c ./phpunit.xml.dist 
