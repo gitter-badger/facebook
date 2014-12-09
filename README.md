@@ -3,6 +3,9 @@ facebook
 
 A Guzzle client for consuming the Graph Api. 
 
+[![Build Status](https://travis-ci.org/cfralick/facebook.svg)](https://travis-ci.org/cfralick/facebook)  
+
+
 __install:__  
 ```bash
 $ composer require cfralick/facebook
