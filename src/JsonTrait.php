@@ -5,7 +5,7 @@
 namespace Facebook;
 
 
-class Result extends \ArrayObject implements \JsonSerializable
+trait JsonTrait
 {
     public function jsonSerialize()
     {
@@ -21,9 +21,4 @@ class Result extends \ArrayObject implements \JsonSerializable
     {
         return $this->toJson();
     }
-
-    public function toArray()
-    {
-        return $this->getArrayCopy();
-    } 
 }
