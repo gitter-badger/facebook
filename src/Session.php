@@ -5,50 +5,25 @@
 
 namespace Facebook;
 
-class Session implements \JsonSerializable
+final class Session extends \ArrayObject 
 {
-    private $client_id;
-    private $client_secret;
-
-    final public static function fromEnv()
+    final public function __construct($client_id, $client_secret)
     {
-        return new self(getenv('FACEBOOK_CLIENT_ID'), getenv('FACEBOOK_CLIENT_SECRET'));
+        parent::__construct(get_defined_vars());
     }
     
-    final public static function fromJson($path)
+    final public function offsetSet($name, $value)
     {
-        list($clientId, $clientSecret)=json_decode(file_get_contents($path), true);
-        return new self($clientId, $clientSecret);
+        throw new \LogicException(sprintf('Cannot set %s to %s. %s is immutable.', $name, $value, __CLASS__));
     }
 
-    final public static function factory($clientId, $clientSecret)
+    final public function offsetUnset($name)
     {
-        return new self($clientId, $clientSecret);
-    }
-
-    final private function __construct($clientId, $clientSecret)
-    {
-        $this->client_id = $clientId;
-        $this->client_secret = $clientSecret;
+        throw new \LogicException(sprintf('Cannot unset %s. %s is immutable', $name, __CLASS__));
     }
 
     final public function __invoke()
     {
-        return get_object_vars($this);
-    }
-
-    final public function jsonSerialize()
-    {
-        return $this();
-    }
-
-    final public function __toString()
-    {
-        return json_encode($this());
-    }
-
-    final private function get($name)
-    {
-        return getenv(strtoupper($name));
+        return $this->getArrayCopy();
     }
 }
