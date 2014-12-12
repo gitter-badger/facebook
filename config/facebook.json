@@ -5,7 +5,7 @@
     "operations": {
         "getObject": {
             "httpMethod": "GET",
-            "uri": "/{+version}{/path*}",
+            "uri": "/{+version}{/path*}?{+access_token}",
             "responseClass": "ObjectModel",
             "parameters": {
                 "version": { "$ref": "Version" },
@@ -69,7 +69,7 @@
     "models": {
         "AccessToken": {
             "type": "string",
-            "location": "query",
+            "location": "uri",
             "required": false
         },
         "Version": {
