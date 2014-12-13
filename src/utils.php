@@ -25,8 +25,7 @@ function mapResult(array $objects, array $types = [], array $aliases = []) {
     return new ArrayCollection(array_map($fn, $objects));
 }
 
-function parseQs($query) {
-    $qs = [];
+function parseQs($query, $qs = []) {
     parse_str($query, $qs);
     return $qs;
 }

@@ -17,7 +17,7 @@ class FacebookClientTest extends ClientTestCase
 {
     protected function setUp()
     {
-        $this->client = self::$container['facebook.client'];
+        $this->client = self::$container;
     }
     
     protected function tearDown()
