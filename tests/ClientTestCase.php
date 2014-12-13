@@ -10,7 +10,7 @@
  */
 
 namespace Facebook\Tests;
-use Facebook\Container;
+use Pimple\Container;
 
 class ClientTestCase extends \PHPUnit_Framework_TestCase
 {
