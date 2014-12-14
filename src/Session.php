@@ -5,7 +5,7 @@
 
 namespace Facebook;
 
-final class Session extends \ArrayObject 
+final class Session extends \ArrayObject implements \JsonSerializable
 {
     final public function __construct($client_id, $client_secret)
     {
@@ -22,8 +22,13 @@ final class Session extends \ArrayObject
         throw new \LogicException(sprintf('Cannot unset %s. %s is immutable', $name, __CLASS__));
     }
 
-    final public function __invoke()
+    final public function jsonSerialize()
     {
         return $this->getArrayCopy();
+    }
+
+    final public function __invoke()
+    {
+        return $this->jsonSerialize();
     }
 }
