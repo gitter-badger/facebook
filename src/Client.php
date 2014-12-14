@@ -11,34 +11,47 @@ use Facebook\Collection;
 class Client
 {
     private $client;
-    private $clientId;
-    private $clientSecret;
+    
+    private $session;
+    
     private $appAccessToken;
 
-    public function __construct(GuzzleClient $client, $clientId, $clientSecret)
+    public function __construct(Session $session, GuzzleClient $client)
     {
         $this->client = $client;
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
-        $this->appAccessToken = $this->getAppAccessToken($clientId, $clientSecret);
-        $this->client->setConfig('defaults', $this->appAccessToken);
-    }
-    
-    public function getAccessToken()
-    {
-        return isset($this->accessToken) ? $this->accessToken : $this->appAccessToken['access_token'];
+        $this->session = $session;
+        $this->client->setConfig('defaults', $this->getAccessToken());
     }
 
-    private function getAppAccessToken($client_id, $client_secret)
+    public function getAccessToken()
     {
-        return $this->client->getAppAccessToken(get_defined_vars());
+        if(!$this->appAccessToken) {
+            $params = $this->session->jsonSerialize();
+            $this->appAccessToken = $this->client->getAppAccessToken($params);
+        }
+        return $this->appAccessToken;
+    }
+
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    public function getClient()
+    {
+        return $this->client;
     }
     
-    public function debugToken($accessToken)
+    public function __call($method, $arguments) 
     {
-        return $this->client->debugToken(array(
-            'access_token' => $accessToken, 
-            'input_token' => $this->appAccessToken['access_token']
-        )); 
+        if(!$this->client->getDescription()->hasOperation($method)) {
+            return;
+        }
+        try {
+            $result = call_user_func_array([$this->getClient(), $method], $arguments);
+        } catch(\Exception $e) {
+            $result = $e->getMessage();
+        }
+        return $result;
     }
 }

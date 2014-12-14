@@ -1,8 +1,14 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "baseUrl": "https://graph.facebook.com",
+    "apiVersion": "v1.0",
     "name": "Graph API",
+    "description": "a regular old api client",
     "operations": {
+        "abstractGet": {
+            "httpMethod": "GET",
+            "description": "A very poopzoriffic method"
+        },
         "getObject": {
             "httpMethod": "GET",
             "uri": "/{+version}{/path*}?{+access_token}",
@@ -73,12 +79,14 @@
             "required": false
         },
         "Version": {
+            "description": "Api version number",
             "type": "string",
             "location": "uri",
             "required": true,
             "default": "v1.0"
         },
         "Path": {
+            "description": "contains the object id and endpoint",
             "type": "array",
             "location": "uri",
             "required": true
@@ -131,6 +139,19 @@
             "required": false,
             "default": 0
         },
+        "Timestamp": {
+            "location": "json",
+            "type": ["object", "string"],
+            "required": false,
+            "filters": ["\\DateTime::format"]
+        },
+        "Gender": {
+            "location": "json",
+            "type": "string",
+            "enum": ["male","female"],
+            "default": "male",
+            "required": false
+        },
         "ObjectModel": {
             "type": "object"
         },
@@ -152,7 +173,7 @@
                 "first_name": { "$ref": "RequiredString" },
                 "last_name": { "$ref": "RequiredString" },
                 "locale": { "$ref": "OptionalString" },
-                "gender": { "$ref": "OptionalString" }
+                "gender": { "$ref": "Gender" }
             }
         },
         "FansModel": {
@@ -185,7 +206,8 @@
                 "status_type": { "$ref": "RequiredString" },
                 "message": { "$ref": "OptionalString" },
                 "story": { "$ref": "OptionalString" },
-                "timeline_visibility": { "$ref": "OptionalString" }
+                "timeline_visibility": { "$ref": "OptionalString" },
+                "created_time": { "$ref": "Timestamp" }
             }
         },
         "PostsModel": {
