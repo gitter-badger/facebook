@@ -2,7 +2,7 @@
 /**
  * Result.php
  */
-namespace Facebook;
+namespace Facebook\Traits;
 use nikic\iter\fn;
 
 trait Paginated
