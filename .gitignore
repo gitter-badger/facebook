@@ -38,3 +38,6 @@ composer.lock
 .env.php
 
 /app
+.env
+/phpunit.xml*
+!/phpunit.xml.dist
