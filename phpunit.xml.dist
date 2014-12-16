@@ -36,6 +36,7 @@
         <ini name="error_log" value="./log/errors.log"/>
         <const name="FACEBOOK_CLIENT_ID" value="1478610425761299"/>
         <const name="FACEBOOK_CLIENT_SECRET" value="fb992f25d7473220b70e87e3f3926c61"/>
+        <const name="FACEBOOK_APP_ACCESS_TOKEN" value="1478610425761299|1fV82ooz7FLyYO_csXrx8kCXSCc"/>
         <const name="JSON_SCHEMA" value="./config/facebook.json"/>
     </php>
 </phpunit>
