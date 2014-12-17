@@ -93,7 +93,8 @@
                         "likes",
                         "talking_about_count",
                         "name",
-                        "category"
+                        "category",
+                        "category_list"
                     ],
                     "location": "uri"
                 }
@@ -141,6 +142,26 @@
             "type": ["number","string"],
             "location": "json",
             "required": true
+        },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "name": { "$ref": "RequiredString" },
+                "facebook_id": {
+                    "required": false,
+                    "type": ["number", "string"],
+                    "location": "json",
+                    "sentAs": "id"
+                }
+            }
+        },
+        "CategoryList": {
+            "type": "array",
+            "items": { 
+                "type": "object",
+                "$ref": "Category" 
+            },
+            "required": false
         },
         "FacebookPostId": {
             "$ref": "FacebookId",
@@ -211,7 +232,8 @@
                 "facebook_id": { "$ref": "FacebookId" },
                 "name": { "$ref": "RequiredString" },
                 "username": { "$ref": "OptionalString" },
-                "category": { "$ref": "RequiredString" }
+                "category": { "$ref": "RequiredString" },
+                "category_list": { "$ref": "CategoryList" }
             }
         },
         "UserModel": {

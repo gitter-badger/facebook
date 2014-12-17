@@ -14,7 +14,7 @@ use GuzzleHttp\Command\Guzzle;
 use GuzzleHttp\Client;
 use Facebook\Client as FacebookClient;
 use Facebook\Api\Session;
-
+use GuzzleHttp\Subscriber\Mock;
 class ClientTestCase extends \PHPUnit_Framework_TestCase
 {
     const CLIENT_CLASS = "\\Facebook\\Client";

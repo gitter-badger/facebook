@@ -8,4 +8,4 @@ before_script:
   - composer dump-autoload
 
 script:
-  - phpunit -v -c ./phpunit.xml.dist 
+  - phpunit -c ./phpunit.xml.dist 

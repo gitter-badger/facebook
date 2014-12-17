@@ -13,6 +13,7 @@ namespace Facebook\Tests;
 use \Facebook\Tests\ClientTestCase;
 use Facebook\Client;
 use Facebook\Api\Session;
+use GuzzleHttp\Subscriber\Mock;
 
 class FacebookClientTest extends ClientTestCase
 {
@@ -50,6 +51,8 @@ class FacebookClientTest extends ClientTestCase
      */
     public function testGetAccessToken()
     {
+        $mock = new \GuzzleHttp\Subscriber\Mock(["HTTP/1.1 200OK\r\n\r\naccess_token=" . FACEBOOK_APP_ACCESS_TOKEN]);
+        $this->client->getClient()->getEmitter()->attach($mock);
         return $this->assertInternalType('string', $this->client->getAccessToken());
     }
     /*

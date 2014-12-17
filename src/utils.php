@@ -12,6 +12,18 @@
 namespace Facebook;
 use Facebook\Collections\Collection;
 use ConnorVG\Transform\Transform;
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Client;
+use GuzzleHttp\Subscriber\Log\LogSubscriber;
+
+function clientFactory($descriptionLocation, array $config = []) {
+    $description = new Description(jsonLoad($descriptionLocation));
+    $client = new Client;
+    $client->getEmitter()->attach(new LogSubscriber);
+    return new GuzzleClient($client, $description, $config);
+}
+
 
 function path() {
     return join(DIRECTORY_SEPARATOR, func_get_args());
@@ -21,7 +33,7 @@ function abspath() {
     return realpath(call_user_func_array('path', func_get_args()));
 }
 
-function jsonLoads(array $data, $as = true) {
+function jsonLoads($data, $as = true) {
     $json = json_decode($data, $as);
     if(JSON_ERROR_NONE === json_last_error()) {
         return $json;
