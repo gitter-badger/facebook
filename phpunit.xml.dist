@@ -20,6 +20,7 @@
     <testsuites>
         <testsuite name="Facebook Client Test Suite">
             <directory suffix="Test.php" phpVersion="5.4.0" phpVersionOperator=">=">tests/</directory>
+            <exclude>./tests/FacebookClientTest.php</exclude>
         </testsuite>
     </testsuites>
     <filter>
