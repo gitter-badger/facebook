@@ -46,15 +46,7 @@ class FacebookClientTest extends ClientTestCase
     {
         return $this->assertInstanceOf("\\Facebook\\Api\\Session", $this->client->getSession());
     }
-    /**
-     * @covers \Facebook\Client::getAccessToken
-     */
-    public function testGetAccessToken()
-    {
-        $mock = new \GuzzleHttp\Subscriber\Mock(["HTTP/1.1 200OK\r\n\r\naccess_token=" . FACEBOOK_APP_ACCESS_TOKEN]);
-        $this->client->getClient()->getEmitter()->attach($mock);
-        return $this->assertInternalType('string', $this->client->getAccessToken());
-    }
+    
     /*
      * @covers \Facebook\Client::getAccessToken
      * @covers \Facebook\Client::__call
