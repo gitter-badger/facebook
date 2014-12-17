@@ -10,8 +10,63 @@
  */
 
 namespace Facebook;
-use Doctrine\Common\Collections\ArrayCollection;
+use Facebook\Collections\Collection;
 use ConnorVG\Transform\Transform;
+use GuzzleHttp\Command\Guzzle\GuzzleClient;
+use GuzzleHttp\Command\Guzzle\Description;
+use GuzzleHttp\Client;
+use GuzzleHttp\Subscriber\Log\LogSubscriber;
+
+function clientFactory($descriptionLocation, array $config = []) {
+    $description = new Description(jsonLoad($descriptionLocation));
+    $client = new Client;
+    $client->getEmitter()->attach(new LogSubscriber);
+    return new GuzzleClient($client, $description, $config);
+}
+
+
+function path() {
+    return join(DIRECTORY_SEPARATOR, func_get_args());
+}
+
+function abspath() {
+    return realpath(call_user_func_array('path', func_get_args()));
+}
+
+function jsonLoads($data, $as = true) {
+    $json = json_decode($data, $as);
+    if(JSON_ERROR_NONE === json_last_error()) {
+        return $json;
+    }
+    throw new \InvalidArgumentException('json_decode resulted in error %s', json_last_error());
+}
+
+function jsonLoad($resource, $as = true) {
+    if($str = file_get_contents($resource)) {
+        return jsonLoads($str, $as);
+    }
+    throw new \InvalidArgumentException('fail');
+}
+
+function jsonDumps(array $arr, $fmt = false) {
+    $json = json_encode($arr, $fmt);
+    if(JSON_ERROR_NONE === json_last_error()) {
+        return $json;
+    }
+    throw new \InvalidArgumentException('fuck');
+}
+
+function jsonDump(\SplFileObject $resource, array $data) {
+    if($json = jsonDumps($data)) {
+        return $resource->fwrite($json);
+    }
+}
+
+function jsonToPhp($path) {
+    $rawPhp = jsonLoad($path);
+    $phpFile = preg_replace('/(\.json)/', '.php', $path);
+    return file_put_contents($phpFile, "<?php\n\nreturn " . var_export($rawPhp, true) . ";");
+}
 
 function transformResult(array $object, array $types = [], array $aliases = []) {
     return new Result(Transform::make($object, $types, $aliases));
@@ -22,7 +77,7 @@ function mapResult(array $objects, array $types = [], array $aliases = []) {
         return transformResult($x, $types, $aliases);
     };
     
-    return new ArrayCollection(array_map($fn, $objects));
+    return new Collection(array_map($fn, $objects));
 }
 
 function parseQs($query, $qs = []) {
@@ -36,25 +91,4 @@ function parseUrl($url) {
         $parsed['query'] = parseQs($parsed['query']);
     }
     return $parsed;
-}
-
-function jsonLoads($path) {
-    return json_decode(file_get_contents($path), true);
-}
-
-function jsonToPhp($path) {
-    return toPhpFile(jsonFileNameToPhpFileName($path), fromJsonFile($path));;
-}
-
-function fromJsonFile($path) {
-    return json_decode(file_get_contents($path), true);
-}
-
-function jsonFileNameToPhpFileName($path) {
-    return preg_replace('/(\.json)$/', '.php', $path);
-}
-
-function toPhpFile($outfile, array $php) {
-    $content = "<?php\n\nreturn " . var_export($php, true) . ";";
-    return file_put_contents($outfile, $content);
 }

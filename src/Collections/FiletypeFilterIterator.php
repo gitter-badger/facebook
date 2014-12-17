@@ -3,15 +3,15 @@
  * FilteredFilesystemIterator.php
  */
 
-namespace Facebook;
+namespace Facebook\Collections;
 
-class FilteredFilesystemIterator extends \FilterIterator
+class FiletypeFilterIterator extends \FilterIterator
 {
     private $ext;
 
-    public function __construct($itr, $ext)
+    public function __construct(\FilesystemIterator $itr, $ext)
     {
-        parent::__construct(new \FilesystemIterator($itr));
+        parent::__construct($itr);
         $this->ext = $ext;
     } 
 

@@ -11,12 +11,14 @@
         },
         "getObject": {
             "httpMethod": "GET",
-            "uri": "/{+version}{/path*}?{+access_token}",
+            "uri": "/{+version}{/path*}",
             "responseClass": "ObjectModel",
             "parameters": {
                 "version": { "$ref": "Version" },
                 "path": { "$ref": "Path" },
                 "fields": { "$ref": "Fields" },
+                "since": { "$ref": "OptionalQueryString" },
+                "until": { "$ref": "OptionalQueryString" },
                 "access_token": {"$ref": "AccessToken" }
             }
         },
@@ -70,13 +72,46 @@
         "collection": {
             "extends": "getObject",
             "responseClass": "CollectionModel"
+        },
+        "getPage": {
+            "extends": "getObject",
+            "uri": "/{+version}/{path}?{fields*}",
+            "responseClass": "PageModel",
+            "parameters": {
+                "version": { "$ref": "Version" },
+                "path": { 
+                    "requried": true,
+                    "type": ["number", "string"],
+                    "location": "uri"
+                },
+                "fields": {
+                    "required": false,
+                    "type": ["array"],
+                    "default": [
+                        "id",
+                        "username",
+                        "likes",
+                        "talking_about_count",
+                        "name",
+                        "category",
+                        "category_list"
+                    ],
+                    "location": "uri"
+                }
+            }
         }
     },
     "models": {
         "AccessToken": {
             "type": "string",
-            "location": "uri",
-            "required": false
+            "description": "A facebook access token for an app, page, or user",
+            "location": "query",
+            "required": true,
+            "filters": ["urldecode"]
+        },
+        "Token": {
+            "$ref": "AccessToken",
+            "required": true
         },
         "Version": {
             "description": "Api version number",
@@ -107,6 +142,35 @@
             "type": ["number","string"],
             "location": "json",
             "required": true
+        },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "name": { "$ref": "RequiredString" },
+                "facebook_id": {
+                    "required": false,
+                    "type": ["number", "string"],
+                    "location": "json",
+                    "sentAs": "id"
+                }
+            }
+        },
+        "CategoryList": {
+            "type": "array",
+            "items": { 
+                "type": "object",
+                "$ref": "Category" 
+            },
+            "required": false
+        },
+        "FacebookPostId": {
+            "$ref": "FacebookId",
+            "filters": [
+                {
+                    "method": "explode",
+                    "args": ["_", "@value"]
+                }
+            ]
         },
         "RequiredString": {
             "location": "json",
@@ -147,13 +211,20 @@
         },
         "Gender": {
             "location": "json",
+            "enum": [
+                "male",
+                "female",
+                "none"
+            ],
             "type": "string",
             "enum": ["male","female"],
             "default": "male",
             "required": false
         },
         "ObjectModel": {
-            "type": "object"
+            "type": "object",
+            "description": "A object in the Facebook Graph Api.",
+            "static": false
         },
         "PageModel": {
             "extends": "ObjectModel",
@@ -161,7 +232,8 @@
                 "facebook_id": { "$ref": "FacebookId" },
                 "name": { "$ref": "RequiredString" },
                 "username": { "$ref": "OptionalString" },
-                "category": { "$ref": "RequiredString" }
+                "category": { "$ref": "RequiredString" },
+                "category_list": { "$ref": "CategoryList" }
             }
         },
         "UserModel": {
@@ -199,7 +271,6 @@
         },
         "PostModel": {
             "type": "object",
-            "location": "json",
             "properties": {
                 "type": { "$ref": "RequiredString" },
                 "facebook_id": { "$ref": "FacebookId" },
@@ -212,14 +283,14 @@
         },
         "PostsModel": {
             "type": "array",
-            "location": "json",
-            "sentAs": "data",
-            "items": { "$ref": "PostModel" }
+            "items": {
+                "$ref": "PostModel"
+            }
         },
         "PagingModel": {
             "type": "object",
-            "location": "json",
             "required": false,
+            "location": "json",
             "properties": {
                 "previous": { "$ref": "ParsedUrl" },
                 "next": { "$ref": "ParsedUrl" }
@@ -228,10 +299,8 @@
         "CollectionModel": {
             "extends": "ObjectModel",
             "properties": {
-                "paging": { "$ref": "PagingModel" }
-            },
-            "additionalProperties": {
-                "location": "json"
+                "paging": { "$ref": "PagingModel" },
+                "shit": { "sentAs": "data", "type": "object", "location": "json" }
             }
         },
         "AccessTokenModel": {
@@ -255,8 +324,10 @@
         },
         "DebugTokenModel": {
             "type": "object",
-            "additionalProperties": {
-                "location": "json"
+            "location": "json",
+            "properties": {
+                "app_id": { "$ref": "RequiredNumber" },
+                "user_id": { "$ref": "RequiredNumber" }
             }
         }
     }

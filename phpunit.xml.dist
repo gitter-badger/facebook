@@ -4,24 +4,41 @@
 <phpunit
     backupGlobals               = "false"
     backupStaticAttributes      = "false"
+    cacheTokens                 = "false"
     colors                      = "true"
     convertErrorsToExceptions   = "true"
     convertNoticesToExceptions  = "true"
     convertWarningsToExceptions = "true"
     processIsolation            = "false"
-    stopOnFailure               = "false"
+    stopOnFailure               = "true"
+    stopOnIncomplete            = "true"
+    stopOnSkipped               = "true"
     syntaxCheck                 = "true"
+    strict                      = "false"
     bootstrap                   = "vendor/autoload.php">
 
     <testsuites>
         <testsuite name="Facebook Client Test Suite">
-            <directory suffix="Test.php">tests/</directory>
+            <directory suffix="Test.php" phpVersion="5.4.0" phpVersionOperator=">=">tests/</directory>
+            <exclude>./tests/FacebookClientTest.php</exclude>
         </testsuite>
     </testsuites>
     <filter>
         <blacklist>
-            <directory>./vendor</directory>
-            <directory>./tests</directory>
+            <directory>./vendor/</directory>
+        </blacklist>
+        <blacklist>
+            <directory>./tests/</directory>
         </blacklist>
     </filter>
+    <php>
+        <ini name="date.timezone" value="UTC"/>
+        <ini name="error_reporting" value="E_ALL"/>
+        <ini name="error_log" value="./log/errors.log"/>
+        <const name="FACEBOOK_CLIENT_ID" value="1478610425761299"/>
+        <const name="FACEBOOK_CLIENT_SECRET" value="fb992f25d7473220b70e87e3f3926c61"/>
+        <const name="FACEBOOK_APP_ACCESS_TOKEN" value="'1478610425761299|1fV82ooz7FLyYO_csXrx8kCXSCc'"/>
+        <const name="JSON_SCHEMA" value="./config/facebook.json"/>
+    </php>
 </phpunit>
+

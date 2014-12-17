@@ -44,6 +44,6 @@
         "phpunit/phpunit-skeleton-generator": "~2.0"
     },
     "scripts": {
-        "test": "phpunit -c phpunit.xml.dist -v"
+        "test": "./vendor/bin/phpunit --configuration=./phpunit.xml.dist --verbose"
     }
 }
